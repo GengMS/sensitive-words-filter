@@ -117,7 +117,8 @@ public class DfaSensitiveWordsFilterExecutor {
             int charCount = 1;
             for (int i = index + 1; i < content.length(); i++) {
                 char wordChar = content.charAt(i);
-                if(Character.isSpaceChar(wordChar) || wordChar == '\n' || "\r\n".indexOf(wordChar) != -1){
+                //这个if用来实现 如果敏感词间带有换行，空格等格式可以正常进行匹配， 这个if去掉后也可正常使用，但不能跳过空格等特殊格式; 后期可以再丰富条件
+                if(isSkip(wordChar)){
                     charCount++;
                     continue;
                 }
@@ -149,6 +150,18 @@ public class DfaSensitiveWordsFilterExecutor {
             }
         }
 
+        return false;
+    }
+
+    /**
+     *
+     * @param wordChar
+     * @return
+     */
+    private boolean isSkip(char wordChar){
+        if((Character.isSpaceChar(wordChar) || wordChar == '\n' || "\r\n".indexOf(wordChar) != -1)){
+            return true;
+        }
         return false;
     }
 }
